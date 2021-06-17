@@ -6,9 +6,12 @@
 <body>
 <h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
 <hr>
-<ul style="font-size: large">
-    <li><a href="users">Users</a></li>
-    <li><a href="meals">Meals</a></li>
-</ul>
+<form method="post" action="users">
+    <input type="radio" id="admin" name="userId" value="1">
+    <label for="admin">Admin</label><br>
+    <input type="radio" id="user" name="userId" value="2" checked>
+    <label for="user">User</label><br>
+    <button type="submit">Submit</button>
+</form>
 </body>
 </html>
