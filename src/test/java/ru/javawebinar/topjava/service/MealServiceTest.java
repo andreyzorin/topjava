@@ -1,6 +1,10 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -13,6 +17,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -27,8 +33,28 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    private static final Logger logger = Logger.getLogger("");
+    private static final StringBuilder summary = new StringBuilder();
+
+    @Rule
+    public Stopwatch stopwatch = new Stopwatch() {
+        @Override
+        protected void finished(long nanos, Description description) {
+            String tmp = String.format("Test %s - spent %d microseconds",
+                    description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            logger.info(tmp);
+            summary.append(tmp).append("\n");
+        }
+    };
+
     @Autowired
     private MealService service;
+
+    @AfterClass
+    public static void summary() {
+        logger.info("\n---------------------------------\n" +
+                summary + "\n---------------------------------\n");
+    }
 
     @Test
     public void delete() {
